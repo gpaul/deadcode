@@ -9,23 +9,17 @@ import (
 	"os"
 	"sort"
 	"strings"
+
+	"github.com/kisielk/gotool"
 )
 
 var exitCode int
 
 func main() {
 	flag.Parse()
-	if flag.NArg() == 0 {
-		doDir(".")
-	} else {
-		for _, name := range flag.Args() {
-			// Is it a directory?
-			if fi, err := os.Stat(name); err == nil && fi.IsDir() {
-				doDir(name)
-			} else {
-				errorf("not a directory: %s", name)
-			}
-		}
+	dirs := gotool.ImportPaths(flag.Args())
+	for _, name := range dirs {
+		doDir(name)
 	}
 	os.Exit(exitCode)
 }
